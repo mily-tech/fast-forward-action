@@ -15,14 +15,6 @@ export class GitHubClientWrapper implements GitHubClient{
     this.repo = context.repo.repo;
   };
   
-  get_current_pull_request_number(): number {
-    if (!this.context.payload.issue || !this.context.payload.issue.pull_request){
-      throw new Error('Issue is not a pull request! No pull request found in context');
-    }
-    
-    return this.context.payload.issue.number;
-  };
-
   async comment_on_pull_request_async(pr_number: number, comment: string): Promise<void> {
     await this.restClient.issues.createComment({
       owner: this.owner,

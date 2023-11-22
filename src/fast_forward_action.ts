@@ -2,26 +2,25 @@ import { GitHubClient } from './github_client_interface'
 import { PrCommentMessages } from './comment_messages_interface';
 
 
-export class FastForwardAction{
+export class FastForwardAction {
 
-  constructor(public client: GitHubClient){
+  constructor(public client: GitHubClient) {
     this.client = client;
   };
 
-  async async_merge_fast_forward(client: GitHubClient, set_status: boolean): Promise<boolean>{  
-    const pr_number = client.get_current_pull_request_number();
+  async async_merge_fast_forward(client: GitHubClient, pr_number: number, set_status: boolean): Promise<boolean> {
 
     // temporarily set success, then try to merge using ff-only
-    if (set_status) {await client.set_pull_request_status(pr_number, "success");}
+    if (set_status) { await client.set_pull_request_status(pr_number, "success"); }
 
     try {
 
       await client.fast_forward_target_to_source_async(pr_number);
 
-    } catch(error){
+    } catch (error) {
 
       console.log(error);
-      if (set_status) {await client.set_pull_request_status(pr_number, "failure");}
+      if (set_status) { await client.set_pull_request_status(pr_number, "failure"); }
       return false;
 
     }
@@ -29,8 +28,7 @@ export class FastForwardAction{
 
   }
 
-  async async_comment_on_pr(client: GitHubClient, comment_message: PrCommentMessages, ff_status: boolean, prod_branch: string, stage_branch: string){
-    const pr_number = client.get_current_pull_request_number();
+  async async_comment_on_pr(client: GitHubClient, pr_number: number, comment_message: PrCommentMessages, ff_status: boolean, prod_branch: string, stage_branch: string) {
     const source_head = await client.get_pull_request_source_head_async(pr_number);
     const target_base = await client.get_pull_request_target_base_async(pr_number);
 
@@ -39,13 +37,13 @@ export class FastForwardAction{
       const updated_message = this.insert_branch_names(comment_message.success_message, source_head, target_base, prod_branch, stage_branch);
       await client.comment_on_pull_request_async(pr_number, updated_message);
       return;
-      
+
     } else {
-      
+
       let stageEqualsProd = true;
       try {
         stageEqualsProd = await client.compate_branch_head(prod_branch, stage_branch);
-      } catch(error){
+      } catch (error) {
         console.log(error);
       }
 
@@ -55,10 +53,10 @@ export class FastForwardAction{
       return;
 
     }
-    
+
   }
 
-  insert_branch_names(message: string, source: string, target: string, prod_branch: string, stage_branch: string): string{
+  insert_branch_names(message: string, source: string, target: string, prod_branch: string, stage_branch: string): string {
     return message.replace(/source_head/g, source).replace(/target_base/g, target).replace(/prod_branch/g, prod_branch).replace(/stage_branch/g, stage_branch);
   }
 

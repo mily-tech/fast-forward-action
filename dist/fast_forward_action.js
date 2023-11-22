@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -36,19 +36,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FastForwardAction = void 0;
 var FastForwardAction = /** @class */ (function () {
     function FastForwardAction(client) {
         this.client = client;
         this.client = client;
     }
     ;
-    FastForwardAction.prototype.async_merge_fast_forward = function (client, set_status) {
+    FastForwardAction.prototype.async_merge_fast_forward = function (client, pr_number, set_status) {
         return __awaiter(this, void 0, void 0, function () {
-            var pr_number, error_1;
+            var error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        pr_number = client.get_current_pull_request_number();
                         if (!set_status) return [3 /*break*/, 2];
                         return [4 /*yield*/, client.set_pull_request_status(pr_number, "success")];
                     case 1:
@@ -74,14 +74,12 @@ var FastForwardAction = /** @class */ (function () {
             });
         });
     };
-    FastForwardAction.prototype.async_comment_on_pr = function (client, comment_message, ff_status, prod_branch, stage_branch) {
+    FastForwardAction.prototype.async_comment_on_pr = function (client, pr_number, comment_message, ff_status, prod_branch, stage_branch) {
         return __awaiter(this, void 0, void 0, function () {
-            var pr_number, source_head, target_base, updated_message, stageEqualsProd, error_2, failure_message, updated_message;
+            var source_head, target_base, updated_message, stageEqualsProd, error_2, failure_message, updated_message;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        pr_number = client.get_current_pull_request_number();
-                        return [4 /*yield*/, client.get_pull_request_source_head_async(pr_number)];
+                    case 0: return [4 /*yield*/, client.get_pull_request_source_head_async(pr_number)];
                     case 1:
                         source_head = _a.sent();
                         return [4 /*yield*/, client.get_pull_request_target_base_async(pr_number)];

@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GitHubClientWrapper = void 0;
 var github_1 = require("@actions/github");
 var GitHubClientWrapper = /** @class */ (function () {
     function GitHubClientWrapper(context, githubToken) {
@@ -44,13 +45,6 @@ var GitHubClientWrapper = /** @class */ (function () {
         this.owner = context.repo.owner;
         this.repo = context.repo.repo;
     }
-    ;
-    GitHubClientWrapper.prototype.get_current_pull_request_number = function () {
-        if (!this.context.payload.issue || !this.context.payload.issue.pull_request) {
-            throw new Error('Issue is not a pull request! No pull request found in context');
-        }
-        return this.context.payload.issue.number;
-    };
     ;
     GitHubClientWrapper.prototype.comment_on_pull_request_async = function (pr_number, comment) {
         return __awaiter(this, void 0, void 0, function () {
@@ -81,7 +75,7 @@ var GitHubClientWrapper = /** @class */ (function () {
                         return [4 /*yield*/, this.restClient.git.updateRef({
                                 owner: this.owner,
                                 repo: this.repo,
-                                ref: "heads/" + pullRequestData.base.ref,
+                                ref: "heads/".concat(pullRequestData.base.ref),
                                 sha: pullRequestData.head.sha,
                                 force: false
                             })];

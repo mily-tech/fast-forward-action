@@ -3,14 +3,15 @@ import * as github from '@actions/github';
 import { GitHubClientWrapper } from './github_client_wrapper';
 import { FastForwardAction } from './fast_forward_action';
 
-async function run(): Promise<void>{
+async function run(): Promise<void> {
   const github_token = core.getInput('GITHUB_TOKEN');
-  
+  const pr_number = Number(core.getInput('pull_request_number', { required: true }));
+
   const success_message = core.getInput('success_message') || "Fast-forward Succeeded!";
   const failure_message = core.getInput('failure_message') || "Fast-forward Failed!";
   const failure_message_same_stage_and_prod = core.getInput('failure_message_same_stage_and_prod') || failure_message;
   const failure_message_diff_stage_and_prod = core.getInput('failure_message_diff_stage_and_prod') || failure_message;
-  
+
   const comment_messages = {
     success_message: success_message,
     failure_message: failure_message,
@@ -24,11 +25,11 @@ async function run(): Promise<void>{
   const prod_branch = core.getInput('production_branch') || 'master';
   const stage_branch = core.getInput('staging_branch') || 'staging';
 
-  const client = new GitHubClientWrapper(github.context , github_token);
+  const client = new GitHubClientWrapper(github.context, github_token);
   const fastForward = new FastForwardAction(client);
 
-  const ff_status = await fastForward.async_merge_fast_forward(client,set_status);
-  await fastForward.async_comment_on_pr(client, comment_messages, ff_status, prod_branch, stage_branch);
+  const ff_status = await fastForward.async_merge_fast_forward(client, pr_number, set_status);
+  await fastForward.async_comment_on_pr(client, pr_number, comment_messages, ff_status, prod_branch, stage_branch);
 
 }
 
