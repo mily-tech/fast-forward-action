@@ -17,8 +17,10 @@ inputs:
     description: 'Optional, production branch name. Default value is master.'
   staging_branch:
     description: 'Optional, staging or preproduction branch name. Default value is staging.'
+  pull_request_number:
+    description: 'Required, the pull request number used for merging in.'
 runs:
-  using: 'node12'
+  using: 'node20'
   main: 'dist/index.js'
 branding:
   icon: 'git-merge'  
